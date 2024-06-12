@@ -15,7 +15,7 @@ const BookMarkExtension = () => {
   };
 
   return (
-    <div className="container">
+    <div className="container ">
       <h1>Extensions & Bookmarks</h1>
       <ul className="message-list">
         {data.map((item, index) => {
