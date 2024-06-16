@@ -109,3 +109,12 @@ button {
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: #152033; /* Color of the scrollbar thumb when hovered */
 }
+
+.download-button {
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.download-button.downloaded {
+  background-color: green;
+  color: white;
+}

@@ -5,6 +5,7 @@ import data from "../Data/Data.json";
 // The JSON data
 
 const BookMarkExtension = () => {
+  const [isDownloaded, setIsDownloaded] = useState(false);
   const [copied, setCopied] = useState("");
 
   const copyToClipboard = (text) => {
@@ -14,37 +15,79 @@ const BookMarkExtension = () => {
     });
   };
 
+  const fileUrl =
+    "https://github.com/rajnish8869/AllInOneExtensionVSCode/raw/master/remove-comments-0.0.1.vsix";
+
+  const downloadFile = () => {
+    // Create an invisible anchor element
+    const link = document.createElement("a");
+    link.href = fileUrl;
+    link.setAttribute("download", "remove-comments-0.0.1.vsix"); // Suggest filename
+    document.body.appendChild(link);
+
+    // Trigger download
+    link.click();
+
+    // Cleanup
+    document.body.removeChild(link);
+
+    // Update button state
+    setIsDownloaded(true);
+
+    // Reset button state after 2 seconds
+    setTimeout(() => {
+      setIsDownloaded(false);
+    }, 2000);
+  };
+
   return (
     <div className="container ">
       <h1>Extensions & Bookmarks</h1>
       <ul className="message-list">
         {data.map((item, index) => {
-          const key = Object.keys(item)[0];
-          const message = item[key];
           return (
             <li key={index} className="message-item">
               <div className="message-content">
                 <div className="message-content-Header">
-                  <strong>{key}</strong>
-                  <button
-                    onClick={() =>
-                      copyToClipboard(`${decodeURIComponent(message)}`)
-                    }
-                    className={
-                      copied === `${decodeURIComponent(message)}`
-                        ? "copied"
-                        : "Copy"
-                    }
-                  >
-                    {copied === `${decodeURIComponent(message)}` ? (
-                      <span className="copied-text">Copied!</span>
-                    ) : (
-                      "Copy"
-                    )}
-                  </button>
+                  <strong>{`${item.Title} ${
+                    item.Type === "Vscodeextension"
+                      ? "(VS Code Extension)"
+                      : item.Type === "Bookmark"
+                      ? "(Bookmark)"
+                      : ""
+                  }`}</strong>
+                  {item.Type === "Bookmark" ? (
+                    <button
+                      onClick={() =>
+                        copyToClipboard(
+                          `${decodeURIComponent(item.Description)}`
+                        )
+                      }
+                      className={
+                        copied === `${decodeURIComponent(item.Description)}`
+                          ? "copied"
+                          : "Copy"
+                      }
+                    >
+                      {copied === `${decodeURIComponent(item.Description)}` ? (
+                        <span className="copied-text">Copied!</span>
+                      ) : (
+                        "Copy"
+                      )}
+                    </button>
+                  ) : (
+                    <button
+                      onClick={downloadFile}
+                      className={`download-button ${
+                        isDownloaded ? "downloaded" : ""
+                      }`}
+                    >
+                      {isDownloaded ? "Downloaded" : "Download File"}
+                    </button>
+                  )}
                 </div>
                 <div className="message-content-Body custom-scrollbar">
-                  <p>{decodeURIComponent(message)}</p>
+                  <p>{decodeURIComponent(item.Description)}</p>
                 </div>
               </div>
             </li>
